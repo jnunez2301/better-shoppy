@@ -28,10 +28,10 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
+      # PORT: 4000 (Internal only)
       PORT: 4000
-      FRONTEND_URL: http://localhost:${SERVER_PORT:-8080}
-    ports:
-      - "4000:4000"
+    # ports:
+    #   - "4000:4000" <--- REMOVED: Backend is now hidden behind Nginx
     depends_on:
       mysql:
         condition: service_healthy
@@ -45,11 +45,26 @@ services:
       dockerfile: Dockerfile
     container_name: better-shoppy-frontend
     environment:
-      VITE_API_URL: http://localhost:4000
-      VITE_WS_URL: http://localhost:4000
-    ports:
-      - "${SERVER_PORT:-8080}:3000"
+      # Relative paths for Nginx
+      VITE_API_URL: /api
+      VITE_WS_URL: /
+    # ports:
+    #   - "${SERVER_PORT:-8080}:3000" <--- REMOVED: Frontend is now hidden behind Nginx
     depends_on:
+      - backend
+    networks:
+      - better-shoppy-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: better-shoppy-nginx
+    ports:
+      - "${SERVER_PORT:-8080}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
       - backend
     networks:
       - better-shoppy-network

@@ -12,7 +12,13 @@ The easiest way to run the application is using Docker Compose.
 
 ### 1. Configure Environment
 
-Create a `.env` file in the root directory. You can use the example below:
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` if you need to change default credentials or ports.
 
 ```env
 # Database Credentials
