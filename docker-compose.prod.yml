@@ -1,0 +1,61 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: better-shoppy-mysql-prod
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql-data-prod:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - better-shoppy-network-prod
+    restart: always
+
+  backend:
+    image: ghcr.io/jnunez2301/better-shoppy-backend:prod
+    container_name: better-shoppy-backend-prod
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 4000
+      # FRONTEND_URL is used for CORS (if restricted) and potentially email links.
+      # Since we set origin: true in backend, this is less critical for CORS but good to keep.
+      FRONTEND_URL: http://localhost:${SERVER_PORT:-8080}
+    ports:
+      - "4000:4000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - better-shoppy-network-prod
+    restart: always
+
+  frontend:
+    image: ghcr.io/jnunez2301/better-shoppy-frontend:prod
+    container_name: better-shoppy-frontend-prod
+    # Note: VITE_ env vars are build-time. 
+    # The image was built with default values (likely empty/undefined).
+    # If the app relies on defaults in code (e.g. localhost:4000), it will work for local prod test.
+    ports:
+      - "${SERVER_PORT:-8080}:3000"
+    depends_on:
+      - backend
+    networks:
+      - better-shoppy-network-prod
+    restart: always
+
+networks:
+  better-shoppy-network-prod:
+    driver: bridge
+volumes:
+  mysql-data-prod:

@@ -30,10 +30,15 @@ SERVER_PORT=8080   # Port where the frontend will be accessible
 
 ### 2. Run with Docker Compose
 
-Build and start the services:
-
+**Development Build (Local Source):**
 ```bash
 docker-compose up -d --build
+```
+
+**Production Build (Pre-built Images):**
+To use the official production images from GitHub Container Registry:
+```bash
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
 - **Frontend**: http://localhost:8080
