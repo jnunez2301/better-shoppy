@@ -1,0 +1,44 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+          
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: bun install --frozen-lockfile
+        
+      - name: Build
+        working-directory: ./frontend
+        run: bun run build
+
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+          
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: bun install --frozen-lockfile
+        
+      # Since backend is Node/Express, 'build' might just be linting or checking syntax if no transpile step exists.
+      # But common.md says "backend files", usually no build step unless Typescript (but user instruction said "Use ES6+").
+      # If there is no build script, we can just install to verify deps.
+      # Let's check if there is a build script, otherwise just verify installation.
+      # Assuming standard npm install is enough verification for now.

@@ -1,0 +1,25 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+bun.lockb
+package-lock.json
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Data directories
+data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

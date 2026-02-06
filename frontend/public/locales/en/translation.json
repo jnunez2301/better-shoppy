@@ -1,0 +1,81 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "done": "Done",
+    "app_name": "Better Shoppy"
+  },
+  "auth": {
+    "login_title": "Welcome Back",
+    "login_subtitle": "Sign in to access your carts",
+    "register_title": "Create Account",
+    "register_subtitle": "Join Better Shoppy and start sharing carts",
+    "username": "Username",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "choose_avatar": "Choose Avatar",
+    "login_button": "Sign In",
+    "register_button": "Register",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "register_here": "Register here",
+    "login_here": "Sign In here"
+  },
+  "cart_list": {
+    "title": "My Shopping Carts",
+    "subtitle": "Manage and share your shopping lists with others.",
+    "new_cart": "New Cart",
+    "no_carts": "No carts yet",
+    "start_creating": "Start by creating your first shopping cart and share it with your friends.",
+    "created_on": "Created {{date}}",
+    "items": "items",
+    "create_first": "Create your first cart"
+  },
+  "cart_detail": {
+    "add_item": "Add Item",
+    "share_cart": "Share Cart",
+    "delete_cart": "Delete Cart",
+    "cart_empty": "Your cart is empty",
+    "add_first_item": "Add items to your list to get started.",
+    "total_estimated": "Estimated Total",
+    "members": "Members",
+    "cart_not_found": "Cart not found",
+    "go_back": "Go back",
+    "clear_completed": "Clear completed",
+    "clear_all": "Clear all items",
+    "confirm_clear_all": "Search and destroy all items?",
+    "to_buy": "To Buy",
+    "completed": "Completed"
+  },
+  "dialogs": {
+    "create_cart_title": "Create New Cart",
+    "create": "Create",
+    "share_title": "Share Cart",
+    "invite_username": "Invite by username",
+    "username_placeholder": "Enter username",
+    "invite_button": "Invite",
+    "pending_invitations": "Pending Invitations",
+    "no_pending": "No pending invitations",
+    "copy_link": "Link",
+    "revoke": "Revoke",
+    "invitation_created": "Invitation created",
+    "invitation_revoked": "Invitation revoked",
+    "link_copied": "Link copied to clipboard",
+    "expires": "Expires",
+    "product_placeholder": "Add product (e.g. Milk, Apples...)",
+    "cart_placeholder": "e.g. Weekly Groceries",
+    "description_placeholder": "What is this cart for?",
+    "create_cart_button": "Create Cart",
+    "cart_created": "Cart created successfully",
+    "something_wrong": "Something went wrong",
+    "select_logo": "Select Logo"
+  },
+  "profile": {
+    "edit_profile": "Edit Profile",
+    "update_success": "Profile updated successfully"
+  }
+}

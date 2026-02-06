@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "done": "Listo",
+    "app_name": "Better Shoppy"
+  },
+  "auth": {
+    "login_title": "Bienvenido de nuevo",
+    "login_subtitle": "Inicia sesión para acceder a tus listas",
+    "register_title": "Crear Cuenta",
+    "register_subtitle": "Únete a Better Shoppy y comparte tus compras",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "confirm_password": "Confirmar Contraseña",
+    "choose_avatar": "Elige un Avatar",
+    "login_button": "Iniciar Sesión",
+    "register_button": "Registrarse",
+    "no_account": "¿No tienes cuenta?",
+    "have_account": "¿Ya tienes una cuenta?",
+    "register_here": "Regístrate aquí",
+    "login_here": "Inicia sesión aquí"
+  },
+  "cart_list": {
+    "title": "Mis Listas de Compra",
+    "subtitle": "Gestiona y comparte tus listas de compra.",
+    "new_cart": "Nueva Lista",
+    "no_carts": "No tienes listas",
+    "start_creating": "Empieza creando tu primera lista de compra y compártela con amigos.",
+    "created_on": "Creado el {{date}}",
+    "items": "artículos",
+    "create_first": "Crea tu primera lista"
+  },
+  "cart_detail": {
+    "add_item": "Añadir Artículo",
+    "share_cart": "Compartir",
+    "delete_cart": "Eliminar Lista",
+    "cart_empty": "Tu lista está vacía",
+    "add_first_item": "Añade artículos para empezar.",
+    "total_estimated": "Total Estimado",
+    "members": "Miembros",
+    "cart_not_found": "Lista no encontrada",
+    "go_back": "Volver",
+    "clear_completed": "Borrar completados",
+    "clear_all": "Borrar todo",
+    "confirm_clear_all": "¿Estás seguro de querer borrar todo?",
+    "to_buy": "Por Comprar",
+    "completed": "Completados"
+  },
+  "dialogs": {
+    "create_cart_title": "Crear Nueva Lista",
+    "create": "Crear",
+    "share_title": "Compartir Lista",
+    "invite_username": "Invitar por usuario",
+    "username_placeholder": "Nombre de usuario",
+    "invite_button": "Invitar",
+    "pending_invitations": "Invitaciones Pendientes",
+    "no_pending": "No hay invitaciones pendientes",
+    "copy_link": "Enlace",
+    "revoke": "Revocar",
+    "invitation_created": "Invitación creada",
+    "invitation_revoked": "Invitación revocada",
+    "link_copied": "Enlace copiado al portapapeles",
+    "expires": "Caduca",
+    "product_placeholder": "Añadir producto (ej. Leche, Manzanas...)",
+    "cart_name": "Nombre de la Lista",
+    "cart_placeholder": "ej. Compra Semanal",
+    "description": "Descripción (Opcional)",
+    "description_placeholder": "¿Para qué es esta lista?",
+    "create_cart_button": "Crear Lista",
+    "cart_created": "Lista creada con éxito",
+    "something_wrong": "Algo salió mal",
+    "select_logo": "Seleccionar Logo"
+  },
+  "profile": {
+    "edit_profile": "Editar Perfil",
+    "update_success": "Perfil actualizado con éxito"
+  }
+}
