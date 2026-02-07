@@ -66,7 +66,7 @@ services:
     ports:
       - "${SERVER_PORT:-8080}:80"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONTAINER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
     networks:
       - better-shoppy-network-prod
     restart: always

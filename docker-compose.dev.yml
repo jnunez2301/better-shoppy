@@ -73,7 +73,7 @@ services:
       - "${SERVER_PORT:-8080}:80"
       - "${TRAEFIK_DASHBOARD_PORT:-8090}:8080" # Dashboard
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONTAINER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
     networks:
       - better-shoppy-network
     restart: unless-stopped
