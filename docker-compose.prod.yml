@@ -42,6 +42,10 @@ services:
   frontend:
     image: ghcr.io/jnunez2301/better-shoppy-frontend:prod
     container_name: better-shoppy-frontend-prod
+    environment:
+      # Relative paths for Nginx/Traefik
+      VITE_API_URL: /api
+      VITE_WS_URL: /
     depends_on:
       - backend
     networks:
