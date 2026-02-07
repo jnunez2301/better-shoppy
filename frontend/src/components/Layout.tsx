@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300" data-testid="layout">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300" data-testid="layout">
       <ProfileDialog open={isProfileOpen} onOpenChange={(e) => setIsProfileOpen(e.open)} />
 
       {/* Navigation */}

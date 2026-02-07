@@ -30,10 +30,16 @@ Frontend:
 
 ## Compose
 
-* It must build a mysql database
+## Compose
+
+* It must build a mysql database (MySQL 8.0)
 * It must build backend that depends on database
 * It must build frontend that depends on backend
-* Only expose the frontend service. Provide the port through the SERVER_PORT environment variable if the variable is not provided fallback to port 8080.
+* **Traefik** is used as the reverse proxy (v2.11).
+    * Do not use Nginx.
+    * Use Docker Labels on services (`traefik.http.routers...`) to configure routing.
+    * Frontend: `/`
+    * Backend: `/api` and `/socket.io`
 * MySQL database config must follow good and secure practices
 * Do not add version to the start of the file, it's deprecated
 
@@ -52,7 +58,7 @@ Frontend:
 ## Frontend Rules
 * Do not import React explicitly. Rely on the automatic JSX runtime.
 * Components must be functional components using arrow functions. Props and hooks are allowed.
-* You must use Code based route configuration
+* You must use Code based route configuration (@tanstack/react-router)
 * Every component must look like this
 ```typescript
 const ComponenteA = () => {
@@ -115,7 +121,10 @@ const ComponenteA = () => {
 * zod
 * @hookform/resolvers
 * @tanstack/react-query
+* @hookform/resolvers
+* @tanstack/react-query
 * sonner
+* next-themes
 
 ## Error Handling
 - Use centralized error handling when possible.

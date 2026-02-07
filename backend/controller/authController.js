@@ -81,21 +81,57 @@ export const getMe = async (req, res, next) => {
  */
 export const updateProfile = async (req, res, next) => {
   try {
-    const { avatar } = req.body;
+    const { avatar, theme } = req.body;
 
     // Validation
-    if (!avatar) {
+    if (!avatar && !theme) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide avatar',
+        error: 'Please provide avatar or theme to update',
       });
     }
 
-    const user = await authService.updateUserProfile(req.user.id, { avatar });
+    const user = await authService.updateUserProfile(req.user.id, { avatar, theme });
 
     res.status(200).json({
       success: true,
       data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Change password
+ * PUT /api/auth/password
+ */
+export const changePassword = async (req, res, next) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide current and new password',
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: 'New password must be at least 6 characters long',
+      });
+    }
+
+    const result = await authService.changePassword(req.user.id, {
+      oldPassword,
+      newPassword,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: result,
     });
   } catch (error) {
     next(error);

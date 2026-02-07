@@ -111,7 +111,7 @@ const CartDetail = () => {
     return (
       <Layout>
         <div className="text-center py-20">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('cart_detail.cart_not_found')}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t('cart_detail.cart_not_found')}</h2>
           <Button variant="ghost" onClick={() => navigate({ to: "/" })} className="mt-4">
             <LuArrowLeft className="mr-2" /> {t('cart_detail.go_back')}
           </Button>
@@ -131,15 +131,15 @@ const CartDetail = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate({ to: "/" })}
-              className="p-2 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-400"
+              className="p-2 rounded-xl border border-border hover:bg-accent transition-colors text-muted-foreground"
             >
               <LuArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-foreground">
                 {cart.name}
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {cart.description || t('cart_detail.no_description') || "No description"}
               </p>
             </div>
@@ -157,7 +157,7 @@ const CartDetail = () => {
             <div className="relative">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
+                className="p-2 rounded-lg hover:bg-accent text-muted-foreground transition-colors"
                 data-testid="cart-menu-trigger"
               >
                 <LuEllipsisVertical className="w-5 h-5" />
@@ -166,10 +166,10 @@ const CartDetail = () => {
               {isMenuOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)} />
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-800 z-50 py-1 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="absolute right-0 mt-2 w-48 bg-popover rounded-xl shadow-2xl border border-border z-50 py-1 animate-in fade-in zoom-in-95 duration-200">
                     <button
                       onClick={() => deleteCompletedMutation.mutate()}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
+                      className="w-full text-left px-4 py-2 text-sm text-popover-foreground hover:bg-accent flex items-center gap-2"
                     >
                       {t('cart_detail.clear_completed')}
                     </button>
@@ -191,7 +191,7 @@ const CartDetail = () => {
         </div>
 
         {/* Input */}
-        <div className="bg-white dark:bg-gray-900 p-1 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 sticky top-20 z-10">
+        <div className="bg-card p-1 rounded-2xl shadow-sm border border-border sticky top-20 z-10">
           <ProductInput cartId={id!} />
         </div>
 
@@ -233,10 +233,10 @@ const CartDetail = () => {
             )}
 
             {products?.length === 0 && (
-              <div className="text-center py-20 bg-gray-50/50 dark:bg-gray-900/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-800">
-                <LuShoppingBasket className="w-16 h-16 text-gray-300 dark:text-gray-700 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t('cart_detail.cart_empty')}</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">{t('cart_detail.add_first_item')}</p>
+              <div className="text-center py-20 bg-muted/50 rounded-3xl border-2 border-dashed border-border">
+                <LuShoppingBasket className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-foreground">{t('cart_detail.cart_empty')}</h3>
+                <p className="text-muted-foreground mt-2">{t('cart_detail.add_first_item')}</p>
               </div>
             )}
           </div>

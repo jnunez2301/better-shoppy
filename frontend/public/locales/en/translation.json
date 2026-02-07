@@ -49,7 +49,8 @@
     "clear_all": "Clear all items",
     "confirm_clear_all": "Search and destroy all items?",
     "to_buy": "To Buy",
-    "completed": "Completed"
+    "completed": "Completed",
+    "no_description": "No description"
   },
   "dialogs": {
     "create_cart_title": "Create New Cart",
@@ -76,6 +77,16 @@
   },
   "profile": {
     "edit_profile": "Edit Profile",
-    "update_success": "Profile updated successfully"
+    "update_success": "Profile updated successfully",
+    "general": "General",
+    "security": "Security",
+    "change_password": "Change Password",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_new_password": "Confirm New Password",
+    "save_changes": "Save Changes",
+    "password_changed": "Password changed successfully",
+    "password_mismatch": "Passwords do not match",
+    "current_password_incorrect": "Current password is incorrect"
   }
 }

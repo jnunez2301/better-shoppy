@@ -64,6 +64,11 @@ const ProductItem = ({ product }: Props) => {
             ${isCompleted ? "text-gray-400 dark:text-gray-500 line-through" : "text-gray-900 dark:text-white"}
           `}>
             {product.name}
+            {product.quantity > 1 && (
+              <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 font-normal">
+                x{product.quantity}
+              </span>
+            )}
           </h3>
         </div>
         {product.addedByUser && (

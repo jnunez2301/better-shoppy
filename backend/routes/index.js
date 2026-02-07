@@ -17,6 +17,7 @@ router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
 router.get('/auth/me', authenticate, authController.getMe);
 router.put('/auth/me', authenticate, authController.updateProfile);
+router.put('/auth/password', authenticate, authController.changePassword);
 
 // Cart routes
 router.get('/carts', authenticate, cartController.getCarts);

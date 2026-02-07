@@ -32,6 +32,14 @@ const Product = sequelize.define('Product', {
     defaultValue: 'pending',
     allowNull: false,
   },
+  quantity: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1,
+    allowNull: false,
+    validate: {
+      min: 1,
+    },
+  },
   icon: {
     type: DataTypes.STRING(50),
     allowNull: true,

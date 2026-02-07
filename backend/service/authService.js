@@ -74,7 +74,10 @@ export const getUserProfile = async (userId) => {
 /**
  * Update user profile
  */
-export const updateUserProfile = async (userId, { avatar }) => {
+/**
+ * Update user profile
+ */
+export const updateUserProfile = async (userId, { avatar, theme }) => {
   const user = await User.findByPk(userId);
 
   if (!user) {
@@ -85,6 +88,9 @@ export const updateUserProfile = async (userId, { avatar }) => {
   if (avatar) {
     user.avatar = avatar;
   }
+  if (theme) {
+    user.theme = theme;
+  }
 
   await user.save();
 
@@ -93,6 +99,31 @@ export const updateUserProfile = async (userId, { avatar }) => {
   delete userResponse.password;
 
   return userResponse;
+};
+
+/**
+ * Change password
+ */
+export const changePassword = async (userId, { oldPassword, newPassword }) => {
+  const user = await User.findByPk(userId);
+
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  // Check old password
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+  if (!isPasswordValid) {
+    throw new AppError('Invalid current password', 401);
+  }
+
+  // Hash new password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  await user.save();
+
+  return { message: 'Password updated successfully' };
 };
 
 /**

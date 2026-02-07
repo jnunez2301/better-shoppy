@@ -42,7 +42,7 @@ export const getCartProducts = async (cartId, userId) => {
 /**
  * Add product to cart
  */
-export const addProduct = async (cartId, userId, { name, description }) => {
+export const addProduct = async (cartId, userId, { name, description, quantity = 1 }) => {
   await checkCartAccess(cartId, userId, ['owner', 'admin', 'editor']);
 
   const icon = getIconForProduct(name);
@@ -51,6 +51,7 @@ export const addProduct = async (cartId, userId, { name, description }) => {
     cartId,
     name,
     description,
+    quantity,
     icon,
     addedBy: userId,
     status: 'pending',
@@ -86,6 +87,9 @@ export const updateProduct = async (productId, userId, updates) => {
   }
   if (updates.status !== undefined) {
     product.status = updates.status;
+  }
+  if (updates.quantity !== undefined) {
+    product.quantity = updates.quantity;
   }
 
   await product.save();

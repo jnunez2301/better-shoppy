@@ -24,7 +24,7 @@ export const getProducts = async (req, res, next) => {
  */
 export const addProduct = async (req, res, next) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, quantity } = req.body;
     const { cartId } = req.params;
 
     if (!name) {
@@ -37,6 +37,7 @@ export const addProduct = async (req, res, next) => {
     const product = await productService.addProduct(cartId, req.user.id, {
       name,
       description,
+      quantity,
     });
 
     // Socket emission
@@ -58,12 +59,13 @@ export const addProduct = async (req, res, next) => {
  */
 export const updateProduct = async (req, res, next) => {
   try {
-    const { name, description, status } = req.body;
+    const { name, description, status, quantity } = req.body;
 
     const product = await productService.updateProduct(req.params.id, req.user.id, {
       name,
       description,
       status,
+      quantity,
     });
 
     // Socket emission

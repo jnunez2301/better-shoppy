@@ -77,3 +77,5 @@ If you want to run the frontend or backend locally without Docker, refer to thei
 This project uses GitHub Actions for CI/CD:
 - **PR Check**: builds frontend/backend on pull requests.
 - **Publish**: builds and pushes Docker images to GHCR on merge to `main` (prod) or `develop` (dev).
+
+

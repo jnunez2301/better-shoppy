@@ -13,6 +13,7 @@ interface Props {
 const ProductInput = ({ cartId }: Props) => {
   const { t } = useTranslation()
   const [name, setName] = useState("")
+  const [quantity, setQuantity] = useState(1)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -29,9 +30,10 @@ const ProductInput = ({ cartId }: Props) => {
   })
 
   const addProductMutation = useMutation({
-    mutationFn: (data: { name: string }) => api.post(`/carts/${cartId}/products`, data),
+    mutationFn: (data: { name: string; quantity: number }) => api.post(`/carts/${cartId}/products`, data),
     onSuccess: () => {
       setName("")
+      setQuantity(1)
       setShowSuggestions(false)
     },
   })
@@ -39,12 +41,12 @@ const ProductInput = ({ cartId }: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim()) return
-    addProductMutation.mutate({ name: name.trim() })
+    addProductMutation.mutate({ name: name.trim(), quantity })
   }
 
   const handleSuggestionClick = (suggestionName: string) => {
     setName(suggestionName)
-    addProductMutation.mutate({ name: suggestionName })
+    addProductMutation.mutate({ name: suggestionName, quantity })
     setShowSuggestions(false)
   }
 
@@ -57,7 +59,7 @@ const ProductInput = ({ cartId }: Props) => {
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+  }, [quantity]) // Added quantity dependency to keep effect fresh if needed, though empty array was fine. Better to keep it clean. Actually [] is fine.
 
   return (
     <div className="relative w-full" data-testid="product-input">
@@ -73,9 +75,19 @@ const ProductInput = ({ cartId }: Props) => {
             }}
             onFocus={() => setShowSuggestions(true)}
             placeholder={t('dialogs.product_placeholder')}
-            className="w-full h-12 bg-transparent px-4 text-base text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none"
+            className="w-full h-12 bg-transparent px-4 text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
         </div>
+
+        <input
+          type="number"
+          min="1"
+          value={quantity}
+          onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+          className="w-16 h-12 bg-transparent px-2 text-center text-base text-foreground focus:outline-none border-l border-border"
+          title={t('common.quantity') || "Quantity"}
+        />
+
         <Button
           type="submit"
           isLoading={addProductMutation.isPending}
@@ -87,7 +99,7 @@ const ProductInput = ({ cartId }: Props) => {
 
       {showSuggestions && suggestions.length > 0 && (
         <div
-          className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-50 py-2 max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute top-full left-0 right-0 mt-2 bg-popover rounded-2xl shadow-2xl border border-border z-50 py-2 max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
           data-testid="suggestions-list"
         >
           {suggestions.map((s: any, i: number) => (
@@ -95,10 +107,10 @@ const ProductInput = ({ cartId }: Props) => {
               key={i}
               type="button"
               onClick={() => handleSuggestionClick(s.name)}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
             >
               <span className="text-2xl">{getEmojiForIcon(s.icon)}</span>
-              <span className="text-gray-900 dark:text-white font-medium">{s.name}</span>
+              <span className="text-foreground font-medium">{s.name}</span>
             </button>
           ))}
         </div>
