@@ -6,19 +6,12 @@ import * as invitationService from '../service/invitationService.js';
  */
 export const createInvitation = async (req, res, next) => {
   try {
-    const { invitedUsername, role, singleUse } = req.body;
-
-    if (!invitedUsername) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invited username is required',
-      });
-    }
+    const { role, singleUse } = req.body;
 
     const invitation = await invitationService.createInvitation(
       req.params.cartId,
       req.user.id,
-      { invitedUsername, role, singleUse }
+      { role, singleUse }
     );
 
     res.status(201).json({

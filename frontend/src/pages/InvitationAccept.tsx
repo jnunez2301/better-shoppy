@@ -23,7 +23,7 @@ const InvitationAccept = () => {
     mutationFn: () => api.post(`/invitations/${token}/accept`),
     onSuccess: (response) => {
       toast.success("Invitation accepted!")
-      navigate({ to: "/cart/$id", params: { id: response.data.data.cartId } })
+      navigate({ to: "/cart/$id", params: { id: response.data.data.cart.id } })
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || "Could not accept invitation")

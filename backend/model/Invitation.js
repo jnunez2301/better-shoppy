@@ -28,7 +28,7 @@ const Invitation = sequelize.define('Invitation', {
   },
   invitedUsername: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true, // Now optional for general share links
     validate: {
       len: [3, 50],
     },

@@ -7,7 +7,7 @@ Better Shoppy is a real-time collaborative shopping list application.
 The easiest way to run the application is using Docker Compose.
 
 ### Prerequisites
-- Docker & Docker Compose
+- Docker & Docker Compose **OR** Podman & Podman Compose
 - Bun (optional, for local development)
 
 ### 1. Configure Environment
@@ -34,22 +34,44 @@ JWT_SECRET=your_super_secret_jwt_key_here
 SERVER_PORT=8080   # Port where the frontend will be accessible
 ```
 
+**For Podman Users:**
+
+Add the following to your `.env` file to use Podman socket:
+
+```env
+# Container Runtime Socket (for Podman)
+CONTAINER_SOCK=/run/podman/podman.sock
+
+# Optional: MySQL and Traefik Dashboard ports (dev only)
+MYSQL_PORT=3306
+TRAEFIK_DASHBOARD_PORT=8090
+```
+
 ### 2. Run with Docker Compose
 
 **Development Build (Local Source):**
 ```bash
+# Docker
 docker-compose up -d --build
+
+# Podman
+podman-compose up -d --build
 ```
 
 **Production Build (Pre-built Images):**
 To use the official production images from GitHub Container Registry:
 ```bash
+# Docker
 docker-compose -f docker-compose.prod.yml up -d
+
+# Podman
+podman-compose -f docker-compose.prod.yml up -d
 ```
 
-- **Frontend**: http://localhost:8080
-- **Backend API**: http://localhost:4000/api
-- **Database**: Port 3306 (internal)
+**Access the application:**
+- **Frontend**: http://localhost:8080 (or your `SERVER_PORT`)
+- **Backend API**: http://localhost:8080/api (routed through Traefik)
+- **Traefik Dashboard** (dev only): http://localhost:8090
 
 ### 3. Stop Services
 

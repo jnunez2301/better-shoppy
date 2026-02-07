@@ -5,7 +5,7 @@ import { Op } from 'sequelize';
 /**
  * Create invitation
  */
-export const createInvitation = async (cartId, userId, { invitedUsername, role, singleUse }) => {
+export const createInvitation = async (cartId, userId, { role, singleUse }) => {
   // Check if user has permission (owner or admin)
   const cartUser = await CartUser.findOne({
     where: { cartId, userId },
@@ -21,38 +21,12 @@ export const createInvitation = async (cartId, userId, { invitedUsername, role, 
     throw new AppError('Cart not found', 404);
   }
 
-  // Check if user with this username is already in the cart
-  const existingUser = await User.findOne({ where: { username: invitedUsername } });
-  if (existingUser) {
-    const existingMembership = await CartUser.findOne({
-      where: { cartId, userId: existingUser.id },
-    });
-    if (existingMembership) {
-      throw new AppError('User is already a member of this cart', 400);
-    }
-  }
-
-  // Check for pending invitation
-  const pendingInvitation = await Invitation.findOne({
-    where: {
-      cartId,
-      invitedUsername,
-      status: 'pending',
-      expiresAt: { [Op.gt]: new Date() },
-    },
-  });
-
-  if (pendingInvitation) {
-    throw new AppError('Pending invitation already exists for this user', 400);
-  }
-
   // Create invitation
   const invitation = await Invitation.create({
     cartId,
     invitedBy: userId,
-    invitedUsername,
     role: role || 'editor',
-    singleUse: singleUse !== undefined ? singleUse : true,
+    singleUse: singleUse !== undefined ? singleUse : false, // Default to multi-use for shareable links
   });
 
   await invitation.reload({
@@ -120,9 +94,11 @@ export const acceptInvitation = async (token, userId) => {
     role: invitation.role,
   });
 
-  // Update invitation status
-  invitation.status = 'accepted';
-  await invitation.save();
+  // Update invitation status only if singleUse
+  if (invitation.singleUse) {
+    invitation.status = 'accepted';
+    await invitation.save();
+  }
 
   // Get cart details
   const cart = await Cart.findByPk(invitation.cartId, {
