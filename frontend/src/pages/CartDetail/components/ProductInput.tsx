@@ -15,15 +15,17 @@ const ProductInput = ({ cartId }: Props) => {
   const [name, setName] = useState("")
   const [quantity, setQuantity] = useState(1)
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const { data: suggestions = [] } = useQuery({
     queryKey: ["autocomplete", cartId, name],
     queryFn: async () => {
       if (!name || name.length < 1) return []
-      const response = await api.get(`/carts/${cartId}/products/autocomplete`, {
+      const response = await api.get(`/catalog`, {
         params: { q: name },
       })
+      // The catalog returns { success: true, data: [...] }
+      // The items are { id, name, category, ... }
       return response.data.data
     },
     enabled: name.length > 0,
@@ -53,20 +55,19 @@ const ProductInput = ({ cartId }: Props) => {
   // Close suggestions on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setShowSuggestions(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [quantity]) // Added quantity dependency to keep effect fresh if needed, though empty array was fine. Better to keep it clean. Actually [] is fine.
+  }, [])
 
   return (
-    <div className="relative w-full" data-testid="product-input">
+    <div ref={containerRef} className="relative w-full" data-testid="product-input">
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
           <input
-            ref={inputRef}
             type="text"
             value={name}
             onChange={(e) => {

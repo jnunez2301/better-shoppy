@@ -7,7 +7,8 @@
     "edit": "Editar",
     "add": "Añadir",
     "done": "Listo",
-    "app_name": "Better Shoppy"
+    "app_name": "Better Shoppy",
+    "catalog": "Catálogo"
   },
   "auth": {
     "login_title": "Bienvenido de nuevo",

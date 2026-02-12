@@ -4,6 +4,8 @@ import * as authController from '../controller/authController.js';
 import * as cartController from '../controller/cartController.js';
 import * as productController from '../controller/productController.js';
 import * as invitationController from '../controller/invitationController.js';
+import * as productCatalogController from '../controller/productCatalogController.js';
+
 
 const router = express.Router();
 
@@ -42,5 +44,12 @@ router.get('/carts/:cartId/invitations', authenticate, invitationController.getC
 router.get('/invitations/:token', optionalAuth, invitationController.getInvitation);
 router.post('/invitations/:token/accept', authenticate, invitationController.acceptInvitation);
 router.delete('/invitations/:id', authenticate, invitationController.revokeInvitation);
+
+// Product Catalog routes
+router.get('/catalog', authenticate, productCatalogController.getAll);
+router.post('/catalog', authenticate, productCatalogController.create);
+router.put('/catalog/:id', authenticate, productCatalogController.update);
+router.delete('/catalog/:id', authenticate, productCatalogController.remove);
+
 
 export default router;

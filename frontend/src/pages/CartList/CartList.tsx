@@ -2,7 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import api from "../../utils/api"
 import Layout from "../../components/Layout"
-import { LuPlus, LuShoppingBag, LuTrash2, LuUsers } from "react-icons/lu"
+import { LuPlus, LuShoppingBag, LuTrash2, LuUsers, LuBook } from "react-icons/lu"
+
 import { CART_LOGOS } from "../../utils/iconMap"
 import { useNavigate } from "@tanstack/react-router"
 import { toast } from "sonner"
@@ -57,12 +58,20 @@ const CartList = () => {
               {t('cart_list.subtitle')}
             </p>
           </div>
-          <Button
-            onClick={() => setIsDialogOpen(true)}
-            className="shadow-lg shadow-blue-500/20"
-          >
-            <LuPlus className="mr-2" /> {t('cart_list.new_cart')}
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => navigate({ to: "/products" })}
+            >
+              <LuBook className="mr-2" /> {t('common.catalog') || "Catalog"}
+            </Button>
+            <Button
+              onClick={() => setIsDialogOpen(true)}
+              className="shadow-lg shadow-blue-500/20"
+            >
+              <LuPlus className="mr-2" /> {t('cart_list.new_cart')}
+            </Button>
+          </div>
         </div>
 
         {carts?.length === 0 ? (

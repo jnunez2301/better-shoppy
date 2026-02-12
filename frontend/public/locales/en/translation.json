@@ -7,7 +7,8 @@
     "edit": "Edit",
     "add": "Add",
     "done": "Done",
-    "app_name": "Better Shoppy"
+    "app_name": "Better Shoppy",
+    "catalog": "Catalog"
   },
   "auth": {
     "login_title": "Welcome Back",

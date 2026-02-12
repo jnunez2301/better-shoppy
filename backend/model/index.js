@@ -3,6 +3,8 @@ import Cart from './Cart.js';
 import CartUser from './CartUser.js';
 import Product from './Product.js';
 import Invitation from './Invitation.js';
+import ProductCatalog from './ProductCatalog.js';
+
 
 // User <-> Cart (Owner relationship)
 User.hasMany(Cart, { foreignKey: 'ownerId', as: 'ownedCarts' });
@@ -33,4 +35,5 @@ Invitation.belongsTo(Cart, { foreignKey: 'cartId', as: 'cart' });
 User.hasMany(Invitation, { foreignKey: 'invitedBy', as: 'sentInvitations' });
 Invitation.belongsTo(User, { foreignKey: 'invitedBy', as: 'inviter' });
 
-export { User, Cart, CartUser, Product, Invitation };
+export { User, Cart, CartUser, Product, Invitation, ProductCatalog };
+
