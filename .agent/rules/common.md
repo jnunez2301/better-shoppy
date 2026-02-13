@@ -8,7 +8,7 @@ This file contains common instructions and coding standards for the backend of t
 
 ## Coding Standards
 General:
-- Use always Bun as package manager
+- Use Bun as package manager
 - Use **ES6+** syntax.
 - Prefer **async/await** over callbacks or raw promises.
 - Use descriptive variable and function names.

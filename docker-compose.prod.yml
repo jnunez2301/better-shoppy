@@ -27,9 +27,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
-      PORT: ${SERVER_PORT:-4000}
-    ports:
-      - "${SERVER_PORT:-4000}:4000"
+      PORT: 4000
     depends_on:
       mysql:
         condition: service_healthy
@@ -39,6 +37,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=PathPrefix(`/api`) || PathPrefix(`/socket.io`)"
+      - "traefik.http.routers.backend.entrypoints=api"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
 
   frontend:
@@ -52,6 +51,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 
   traefik:
@@ -61,8 +61,10 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.api.address=:4000"
     ports:
-      - "${CLIENT_PORT:-8080}:80"
+      - "${CLIENT_PORT:-3000}:80"
+      - "${SERVER_PORT:-4000}:4000"
     volumes:
       - ${CONTAINER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
     networks:
