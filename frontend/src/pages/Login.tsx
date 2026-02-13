@@ -46,8 +46,9 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4 transition-colors duration-300">
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl dark:shadow-gray-900/40 border border-gray-100 dark:border-gray-800">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-500/30 mb-4">
-            <LuShoppingBag className="w-8 h-8" />
+          <div className="mb-6 flex flex-col items-center gap-2">
+            <img src="/logo_tab.png" alt="Logo" className="w-20 h-20 object-contain" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Shoppy</span>
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             {t('auth.login_title')}

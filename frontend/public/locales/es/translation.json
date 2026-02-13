@@ -76,7 +76,9 @@
     "create_cart_button": "Crear Lista",
     "cart_created": "Lista creada con éxito",
     "something_wrong": "Algo salió mal",
-    "select_logo": "Seleccionar Logo"
+    "select_logo": "Seleccionar Logo",
+    "delete_cart_title": "Eliminar Lista",
+    "delete_cart_confirmation": "¿Estás seguro de querer borrar esta lista?"
   },
   "profile": {
     "general": "General",

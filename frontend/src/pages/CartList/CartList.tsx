@@ -10,12 +10,14 @@ import { toast } from "sonner"
 import { useState } from "react"
 import { Button } from "../../components/ui/Button"
 import CreateCartDialog from "./components/CreateCartDialog"
+import { Dialog } from "../../components/ui/dialog"
 
 const CartList = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [cartToDelete, setCartToDelete] = useState<string | null>(null)
 
   const { data: carts, isLoading } = useQuery({
     queryKey: ["carts"],
@@ -29,7 +31,8 @@ const CartList = () => {
     mutationFn: (id: string) => api.delete(`/carts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["carts"] })
-      toast.success(t('common.delete') + " success") // Simplified for now, or add translation
+      toast.success(t('common.delete') + " success")
+      setCartToDelete(null)
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || "Failed to delete cart")
@@ -130,11 +133,9 @@ const CartList = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      if (window.confirm("Are you sure you want to delete this cart?")) {
-                        deleteCartMutation.mutate(cart.id)
-                      }
+                      setCartToDelete(cart.id)
                     }}
-                    className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
+                    className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all cursor-pointer"
                     aria-label="Delete cart"
                   >
                     <LuTrash2 className="w-5 h-5" />
@@ -152,6 +153,30 @@ const CartList = () => {
           onOpenChange={(e) => setIsDialogOpen(e.open)}
         />
       )}
+
+      <Dialog
+        open={!!cartToDelete}
+        onOpenChange={(e) => !e.open && setCartToDelete(null)}
+        title={t('dialogs.delete_cart_title') || "Delete Cart"}
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setCartToDelete(null)}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => cartToDelete && deleteCartMutation.mutate(cartToDelete)}
+              isLoading={deleteCartMutation.isPending}
+            >
+              {t('common.delete')}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-gray-500 dark:text-gray-400">
+          {t('dialogs.delete_cart_confirmation') || "Are you sure you want to delete this cart? This action cannot be undone."}
+        </p>
+      </Dialog>
     </Layout>
   )
 }
