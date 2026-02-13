@@ -27,7 +27,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
-      PORT: 4000
+      PORT: ${SERVER_PORT:-4000}
     depends_on:
       mysql:
         condition: service_healthy
@@ -42,10 +42,6 @@ services:
   frontend:
     image: ghcr.io/jnunez2301/better-shoppy-frontend:prod
     container_name: better-shoppy-frontend-prod
-    environment:
-      # Relative paths for Nginx/Traefik
-      VITE_API_URL: /api
-      VITE_WS_URL: /
     depends_on:
       - backend
     networks:
@@ -64,7 +60,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
     ports:
-      - "${SERVER_PORT:-8080}:80"
+      - "${CLIENT_PORT:-8080}:80"
     volumes:
       - ${CONTAINER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
     networks:

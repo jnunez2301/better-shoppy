@@ -88,9 +88,48 @@ If you want to run the frontend or backend locally without Docker, refer to thei
 - [Frontend Documentation](./frontend/README.md)
 - [Backend Documentation](./backend/README.md)
 
+## Mobile Development (Android)
+
+This project uses **Capacitor** to wrap the web application for Android devices.
+
+### Prerequisites
+- Android Studio
+- Bun (or npm/yarn/pnpm)
+
+### Setup & Running on Android
+
+1.  **Install Dependencies**:
+    ```bash
+    cd frontend
+    bun install
+    ```
+
+2.  **Configure API URL**:
+    Create or update your `frontend/.env` file. For Android emulator or device testing, `localhost` won't work. Use your computer's local IP address.
+    ```env
+    VITE_API_URL=http://<YOUR_LOCAL_IP>:4000
+    ```
+    *Note: If using the Android Emulator, `http://10.0.2.2:4000` is the alias for the host machine's localhost.*
+
+3.  **Build and Run**:
+    Use the helper script to build the frontend, sync with Capacitor, and open Android Studio:
+    ```bash
+    bun run build:android
+    ```
+
+4.  **Other Commands**:
+    - `bun run cap:sync`: Sync web assets and plugins to the native platform.
+    - `bun run cap:copy`: Copy web assets to the native platform.
+    - `bun run cap:open:android`: Open the Android project in Android Studio.
+5. **Build and Run**:
+    ```bash
+    # On Android Studio
+    ./android/gradlew assembleDebug
+    ```
 ## Architecture
 
 - **Frontend**: React, Vite, Tailwind, Tanstack Query
+- **Mobile**: Capacitor (Android)
 - **Backend**: Node.js, Express, Socket.IO, Sequelize
 - **Database**: MySQL 8.0
 
