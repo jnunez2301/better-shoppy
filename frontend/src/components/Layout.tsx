@@ -37,7 +37,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <LanguageToggle />
               {user && (
                 <div className="flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-gray-800">
-                  <div className="hidden sm:block text-right">
+                  <div className="text-right">
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-none">{user.username}</p>
 
                   </div>

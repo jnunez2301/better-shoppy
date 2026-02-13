@@ -57,23 +57,25 @@ const ProductItem = ({ product }: Props) => {
       </button>
 
       {/* Info */}
-      <div className="flex-1 min-w-0" onClick={() => toggleStatusMutation.mutate(isCompleted ? "pending" : "completed")}>
-        <div className="flex items-center gap-2">
+      <div className="flex-1 min-w-0 grid gap-0.5 cursor-pointer" onClick={() => toggleStatusMutation.mutate(isCompleted ? "pending" : "completed")}>
+        <div className="flex items-center gap-2 max-w-full">
           <h3 className={`
             font-semibold truncate transition-all duration-300
             ${isCompleted ? "text-gray-400 dark:text-gray-500 line-through" : "text-gray-900 dark:text-white"}
-          `}>
+            
+            max-w-[140px] sm:max-w-none
+          `} title={product.name}>
             {product.name}
           </h3>
-          <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 font-normal shrink-0">
-            x{product.quantity}
-          </span>
         </div>
         {product.addedByUser && (
-          <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold mt-0.5">
-            Added by {product.addedByUser.username}
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold truncate">
+            Added by {product.addedByUser.username || "Unknown"}
           </p>
         )}
+        <span className="text-sm text-gray-500 dark:text-gray-400 font-normal shrink-0">
+          x{product.quantity}
+        </span>
       </div>
 
       {/* Actions */}

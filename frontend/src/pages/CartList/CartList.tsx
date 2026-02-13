@@ -10,14 +10,20 @@ import { toast } from "sonner"
 import { useState } from "react"
 import { Button } from "../../components/ui/Button"
 import CreateCartDialog from "./components/CreateCartDialog"
+import JoinCartDialog from "./components/JoinCartDialog"
 import { Dialog } from "../../components/ui/dialog"
+import { useAuthStore } from "../../stores/useAuthStore"
+import { LuLogOut } from "react-icons/lu"
 
 const CartList = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false)
   const [cartToDelete, setCartToDelete] = useState<string | null>(null)
+  const [cartToLeave, setCartToLeave] = useState<string | null>(null)
+  const { user } = useAuthStore()
 
   const { data: carts, isLoading } = useQuery({
     queryKey: ["carts"],
@@ -36,6 +42,18 @@ const CartList = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || "Failed to delete cart")
+    }
+  })
+
+  const leaveCartMutation = useMutation({
+    mutationFn: (cartId: string) => api.delete(`/carts/${cartId}/users/${user?.id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["carts"] })
+      toast.success("Left cart successfully")
+      setCartToLeave(null)
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || "Failed to leave cart")
     }
   })
 
@@ -67,6 +85,13 @@ const CartList = () => {
               onClick={() => navigate({ to: "/products" })}
             >
               <LuBook className="mr-2" /> {t('common.catalog') || "Catalog"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setIsJoinDialogOpen(true)}
+              className="border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
+              Join Cart
             </Button>
             <Button
               onClick={() => setIsDialogOpen(true)}
@@ -130,16 +155,30 @@ const CartList = () => {
                     {t('cart_list.created_on', { date: new Date(cart.createdAt).toLocaleDateString() })}
                   </span>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setCartToDelete(cart.id)
-                    }}
-                    className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all cursor-pointer"
-                    aria-label="Delete cart"
-                  >
-                    <LuTrash2 className="w-5 h-5" />
-                  </button>
+                  {cart.userRole === 'owner' ? (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setCartToDelete(cart.id)
+                      }}
+                      className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all cursor-pointer"
+                      aria-label="Delete cart"
+                    >
+                      <LuTrash2 className="w-5 h-5" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setCartToLeave(cart.id)
+                      }}
+                      className="p-2 rounded-lg text-gray-400 hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-all cursor-pointer"
+                      aria-label="Leave cart"
+                      title="Leave cart"
+                    >
+                      <LuLogOut className="w-5 h-5" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -151,6 +190,13 @@ const CartList = () => {
         <CreateCartDialog
           open={isDialogOpen}
           onOpenChange={(e) => setIsDialogOpen(e.open)}
+        />
+      )}
+
+      {isJoinDialogOpen && (
+        <JoinCartDialog
+          open={isJoinDialogOpen}
+          onOpenChange={(e) => setIsJoinDialogOpen(e.open)}
         />
       )}
 
@@ -175,6 +221,29 @@ const CartList = () => {
       >
         <p className="text-gray-500 dark:text-gray-400">
           {t('dialogs.delete_cart_confirmation') || "Are you sure you want to delete this cart? This action cannot be undone."}
+        </p>
+      </Dialog>
+      <Dialog
+        open={!!cartToLeave}
+        onOpenChange={(e) => !e.open && setCartToLeave(null)}
+        title="Leave Cart"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setCartToLeave(null)}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => cartToLeave && leaveCartMutation.mutate(cartToLeave)}
+              isLoading={leaveCartMutation.isPending}
+            >
+              Leave Cart
+            </Button>
+          </>
+        }
+      >
+        <p className="text-gray-500 dark:text-gray-400">
+          Are you sure you want to leave this cart? You will lose access to it.
         </p>
       </Dialog>
     </Layout>

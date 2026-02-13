@@ -12,6 +12,9 @@ import MembersList from "./components/MembersList"
 import { Button } from "../../components/ui/Button"
 import ProductItem from "./components/ProductItem"
 import ShareCartDialog from "./components/ShareCartDialog"
+import { useAuthStore } from "../../stores/useAuthStore"
+import { LuLogOut } from "react-icons/lu"
+import { Dialog } from "../../components/ui/dialog"
 
 interface Product {
   id: string
@@ -29,6 +32,9 @@ const CartDetail = () => {
   const [isShareOpen, setIsShareOpen] = useState(false)
   const [isMembersOpen, setIsMembersOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false)
+  const { user } = useAuthStore()
 
   const { data: cart, isLoading: isCartLoading } = useQuery({
     queryKey: ["cart", id],
@@ -84,7 +90,7 @@ const CartDetail = () => {
     mutationFn: () => api.delete(`/carts/${id}/products`),
     onSuccess: () => {
       toaster.create({ title: t('common.delete') + " success", type: "success" })
-      setIsMenuOpen(false)
+      setIsClearDialogOpen(false)
     },
   })
 
@@ -95,6 +101,17 @@ const CartDetail = () => {
       toaster.create({ title: "Completed products removed", type: "success" })
       setIsMenuOpen(false)
     },
+  })
+
+  const leaveCartMutation = useMutation({
+    mutationFn: () => api.delete(`/carts/${id}/users/${user?.id}`),
+    onSuccess: () => {
+      toaster.create({ title: "Left cart successfully", type: "success" })
+      navigate({ to: "/" })
+    },
+    onError: (error: any) => {
+      toaster.create({ title: error.response?.data?.error || "Failed to leave cart", type: "error" })
+    }
   })
 
   if (isCartLoading) {
@@ -167,22 +184,38 @@ const CartDetail = () => {
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)} />
                   <div className="absolute right-0 mt-2 w-48 bg-popover rounded-xl shadow-2xl border border-border z-50 py-1 animate-in fade-in zoom-in-95 duration-200">
-                    <button
-                      onClick={() => deleteCompletedMutation.mutate()}
-                      className="w-full text-left px-4 py-2 text-sm text-popover-foreground hover:bg-accent flex items-center gap-2"
-                    >
-                      {t('cart_detail.clear_completed')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (window.confirm(t('cart_detail.confirm_clear_all'))) {
-                          clearCartMutation.mutate()
-                        }
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center gap-2"
-                    >
-                      {t('cart_detail.clear_all')}
-                    </button>
+                    {cart.userRole !== 'owner' && (
+                      <button
+                        onClick={() => {
+                          setIsLeaveDialogOpen(true)
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/10 flex items-center gap-2"
+                      >
+                        <LuLogOut className="w-4 h-4" />
+                        Leave Cart
+                      </button>
+                    )}
+
+                    {cart.userRole === 'owner' && (
+                      <>
+                        <button
+                          onClick={() => deleteCompletedMutation.mutate()}
+                          className="w-full text-left px-4 py-2 text-sm text-popover-foreground hover:bg-accent flex items-center gap-2"
+                        >
+                          {t('cart_detail.clear_completed')}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsClearDialogOpen(true)
+                            setIsMenuOpen(false)
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center gap-2"
+                        >
+                          {t('cart_detail.clear_all')}
+                        </button>
+                      </>
+                    )}
                   </div>
                 </>
               )}
@@ -259,6 +292,54 @@ const CartDetail = () => {
           userRole={cart.userRole}
         />
       )}
+
+      <Dialog
+        open={isLeaveDialogOpen}
+        onOpenChange={(e) => setIsLeaveDialogOpen(e.open)}
+        title="Leave Cart"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setIsLeaveDialogOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => leaveCartMutation.mutate()}
+              isLoading={leaveCartMutation.isPending}
+            >
+              Leave Cart
+            </Button>
+          </>
+        }
+      >
+        <p className="text-muted-foreground">
+          Are you sure you want to leave this cart? You will lose access to all products and members in it.
+        </p>
+      </Dialog>
+
+      <Dialog
+        open={isClearDialogOpen}
+        onOpenChange={(e) => setIsClearDialogOpen(e.open)}
+        title={t('cart_detail.clear_all') || "Clear All"}
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setIsClearDialogOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => clearCartMutation.mutate()}
+              isLoading={clearCartMutation.isPending}
+            >
+              {t('common.confirm') || "Confirm"}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-muted-foreground">
+          {t('cart_detail.confirm_clear_all') || "Are you sure you want to remove all items from this cart?"}
+        </p>
+      </Dialog>
     </Layout>
   )
 }
