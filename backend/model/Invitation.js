@@ -39,6 +39,11 @@ const Invitation = sequelize.define('Invitation', {
     unique: true,
     allowNull: false,
   },
+  code: {
+    type: DataTypes.STRING(8),
+    unique: true,
+    allowNull: false,
+  },
   role: {
     type: DataTypes.ENUM('admin', 'editor', 'viewer'),
     allowNull: false,

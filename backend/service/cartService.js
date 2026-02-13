@@ -166,13 +166,16 @@ export const removeUserFromCart = async (cartId, userIdToRemove, requestingUserI
     throw new AppError('User not in cart', 404);
   }
 
-  // Cannot remove owner
+  // Owner cannot be removed
   if (targetUserAccess.role === 'owner') {
     throw new AppError('Cannot remove cart owner', 403);
   }
 
-  // Only owner and admin can remove users
-  if (!['owner', 'admin'].includes(requestingUserAccess.role)) {
+  // Allow if removing self OR if requester is owner/admin
+  const isSelfRemoval = requestingUserId === userIdToRemove;
+  const isOwnerOrAdmin = ['owner', 'admin'].includes(requestingUserAccess.role);
+
+  if (!isSelfRemoval && !isOwnerOrAdmin) {
     throw new AppError('Permission denied', 403);
   }
 

@@ -93,3 +93,26 @@ export const getCartInvitations = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Join cart by code
+ * POST /api/invitations/join
+ */
+export const joinCart = async (req, res, next) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      throw new Error('Invitation code is required');
+    }
+
+    const result = await invitationService.joinCartByCode(code.toUpperCase(), req.user.id);
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

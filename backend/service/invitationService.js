@@ -1,6 +1,7 @@
 import { Invitation, Cart, CartUser, User } from '../model/index.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { Op } from 'sequelize';
+import crypto from 'crypto';
 
 /**
  * Create invitation
@@ -21,12 +22,28 @@ export const createInvitation = async (cartId, userId, { role, singleUse }) => {
     throw new AppError('Cart not found', 404);
   }
 
+
+  // Generate unique 8-char code
+  let code;
+  let isUnique = false;
+  while (!isUnique) {
+    code = crypto.randomBytes(4).toString('hex').toUpperCase();
+    const existing = await Invitation.findOne({ where: { code } });
+    if (!existing) isUnique = true;
+  }
+
+  // Set expiration to 48 hours from now
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + 48);
+
   // Create invitation
   const invitation = await Invitation.create({
     cartId,
     invitedBy: userId,
     role: role || 'editor',
     singleUse: singleUse !== undefined ? singleUse : false, // Default to multi-use for shareable links
+    code,
+    expiresAt,
   });
 
   await invitation.reload({
@@ -77,6 +94,68 @@ export const getInvitationByToken = async (token) => {
  */
 export const acceptInvitation = async (token, userId) => {
   const invitation = await getInvitationByToken(token);
+
+  // Check if user is already in cart
+  const existingMembership = await CartUser.findOne({
+    where: { cartId: invitation.cartId, userId },
+  });
+
+  if (existingMembership) {
+    throw new AppError('You are already a member of this cart', 400);
+  }
+
+  // Add user to cart
+  await CartUser.create({
+    cartId: invitation.cartId,
+    userId,
+    role: invitation.role,
+  });
+
+  // Update invitation status only if singleUse
+  if (invitation.singleUse) {
+    invitation.status = 'accepted';
+    await invitation.save();
+  }
+
+  // Get cart details
+  const cart = await Cart.findByPk(invitation.cartId, {
+    include: [
+      { model: User, as: 'owner', attributes: ['id', 'username', 'avatar'] },
+    ],
+  });
+
+  return { cart, role: invitation.role };
+};
+
+/**
+ * Join cart by code
+ */
+export const joinCartByCode = async (code, userId) => {
+  const invitation = await Invitation.findOne({
+    where: { code },
+    include: [
+      { model: Cart, as: 'cart', attributes: ['id', 'name'] },
+      { model: User, as: 'inviter', attributes: ['id', 'username', 'avatar'] },
+    ],
+  });
+
+  if (!invitation) {
+    throw new AppError('Invalid invitation code', 404);
+  }
+
+  // Check if expired
+  if (new Date() > invitation.expiresAt) {
+    if (invitation.status === 'pending') {
+      invitation.status = 'expired';
+      await invitation.save();
+    }
+    throw new AppError('Invitation code has expired', 400);
+  }
+
+  // Check status
+  if (invitation.status !== 'pending') {
+    throw new AppError(`Invitation is ${invitation.status}`, 400);
+  }
 
   // Check if user is already in cart
   const existingMembership = await CartUser.findOne({

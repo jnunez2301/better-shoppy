@@ -41,6 +41,7 @@ router.delete('/products/:id', authenticate, productController.deleteProduct);
 // Invitation routes
 router.post('/carts/:cartId/invitations', authenticate, invitationController.createInvitation);
 router.get('/carts/:cartId/invitations', authenticate, invitationController.getCartInvitations);
+router.post('/invitations/join', authenticate, invitationController.joinCart);
 router.get('/invitations/:token', optionalAuth, invitationController.getInvitation);
 router.post('/invitations/:token/accept', authenticate, invitationController.acceptInvitation);
 router.delete('/invitations/:id', authenticate, invitationController.revokeInvitation);
